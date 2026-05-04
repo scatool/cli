@@ -82,7 +82,11 @@ const wait = command({
   },
   handler: async (opts) => {
     const projectId = requireProjectId(opts.project);
-    const revision = await waitForRevision(projectId, opts.revisionId, opts.timeout, opts.interval);
+    const revision = await waitForRevision(() => fetchRevision(projectId, opts.revisionId), {
+      timeoutSeconds: opts.timeout,
+      intervalSeconds: opts.interval,
+      label: opts.revisionId,
+    });
     emit(revision, REVISION_COLUMNS);
     if (revision.status === "failed") process.exit(1);
   },
@@ -130,7 +134,11 @@ async function createRevisionHandler(type: "archive" | "sbom", opts: CreateOpts)
   if (!data) throw new Error("createRevision returned no body.");
 
   const final = opts.wait
-    ? await waitForRevision(projectId, data.id, opts.timeout, opts.interval)
+    ? await waitForRevision(() => fetchRevision(projectId, data.id), {
+        timeoutSeconds: opts.timeout,
+        intervalSeconds: opts.interval,
+        label: data.id,
+      })
     : data;
   emit(final, REVISION_COLUMNS);
   if (opts.wait && final.status === "failed") process.exit(1);
@@ -146,31 +154,42 @@ async function fetchRevision(projectId: string, revisionId: string): Promise<Rev
   return data;
 }
 
-async function waitForRevision(
-  projectId: string,
-  revisionId: string,
-  timeoutSeconds: number,
-  intervalSeconds: number,
+export interface WaitForRevisionOptions {
+  timeoutSeconds: number;
+  intervalSeconds: number;
+  label?: string;
+  now?: () => number;
+  sleep?: (ms: number) => Promise<void>;
+  onStatus?: (status: RevisionStatus) => void;
+}
+
+export async function waitForRevision(
+  fetcher: () => Promise<Revision>,
+  options: WaitForRevisionOptions,
 ): Promise<Revision> {
-  const deadline = Date.now() + timeoutSeconds * 1000;
+  const now = options.now ?? Date.now;
+  const sleep = options.sleep ?? defaultSleep;
+  const onStatus = options.onStatus ?? ((status) => process.stderr.write(`status: ${status}\n`));
+  const deadline = now() + options.timeoutSeconds * 1000;
   let lastStatus: RevisionStatus | undefined;
   while (true) {
-    const revision = await fetchRevision(projectId, revisionId);
+    const revision = await fetcher();
     if (revision.status !== lastStatus) {
-      process.stderr.write(`status: ${revision.status}\n`);
+      onStatus(revision.status);
       lastStatus = revision.status;
     }
     if (TERMINAL_STATUSES.has(revision.status)) return revision;
-    if (Date.now() >= deadline) {
+    if (now() >= deadline) {
+      const tail = options.label ? ` for ${options.label}` : "";
       throw new Error(
-        `Timed out after ${timeoutSeconds}s waiting for revision ${revisionId} (last status: ${revision.status}).`,
+        `Timed out after ${options.timeoutSeconds}s waiting${tail} (last status: ${revision.status}).`,
       );
     }
-    await sleep(intervalSeconds * 1000);
+    await sleep(options.intervalSeconds * 1000);
   }
 }
 
-function sleep(ms: number): Promise<void> {
+function defaultSleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
