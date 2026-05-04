@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { run, string } from "@drizzle-team/brocli";
 import { folders } from "./commands/folders.ts";
+import { projects } from "./commands/projects.ts";
 import { type OutputFormat, setGlobals } from "./context.ts";
 
 try {
-  await run([folders], {
+  await run([folders, projects], {
     name: "scatool",
     description: "Command-line interface for the SCA Tool.",
     version: "0.0.0",

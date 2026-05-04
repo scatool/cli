@@ -1,5 +1,6 @@
 import { boolean, command, number, positional, string } from "@drizzle-team/brocli";
 import { createFolder, deleteFolder, getFolder, listFolders, updateFolder } from "@scatool/sdk";
+import { apiError } from "../api.ts";
 import { requireClient } from "../context.ts";
 import { emit } from "../output.ts";
 
@@ -113,19 +114,6 @@ const remove = command({
     process.stdout.write(`Deleted folder ${opts.folderId}.\n`);
   },
 });
-
-function apiError(response: Response | undefined, error: unknown): Error {
-  const status = response ? `HTTP ${response.status}` : "request failed";
-  const body =
-    error === undefined || error === null
-      ? "(no body)"
-      : typeof error === "object"
-        ? JSON.stringify(error)
-        : typeof error === "string"
-          ? error
-          : JSON.stringify(error);
-  return new Error(`${status}: ${body}`);
-}
 
 export const folders = command({
   name: "folders",
