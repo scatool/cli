@@ -1,0 +1,795 @@
+openapi: 3.0.0
+info:
+  title: SCA Tool Public API
+  version: 1.0.0
+  contact:
+    name: SCA Tool
+    email: scatool@group.riehle.org
+  description: "Public API for the SCA Tool. Used by CI integrations and external automation.\n\nAuthentication: send `Authorization: Bearer <api-token>`. Tokens are generated in the SCA Tool UI\nunder your organization settings. Each token is scoped to a single organization; all endpoints\noperate within that organization implicitly."
+tags:
+  - name: Folders
+  - name: Projects
+  - name: Revisions
+  - name: Uploads
+paths:
+  /v1/folders:
+    post:
+      operationId: createFolder
+      summary: Create a folder.
+      parameters: []
+      responses:
+        "201":
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Folders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateFolderRequest"
+    get:
+      operationId: listFolders
+      summary: List all folders in the organization.
+      parameters:
+        - $ref: "#/components/parameters/PageQuery.cursor"
+        - $ref: "#/components/parameters/PageQuery.limit"
+        - name: parentFolderId
+          in: query
+          required: false
+          description: Filter to only direct children of this folder.
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          explode: false
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Folder"
+                  nextCursor:
+                    type: string
+                    description: Cursor for the next page. Absent when there is no next page.
+                description: "A paginated list response. `nextCursor` is opaque; pass it back unchanged to fetch the next page."
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Folders
+  "/v1/folders/{folderId}":
+    get:
+      operationId: getFolder
+      summary: Retrieve a folder by id.
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Folders
+    patch:
+      operationId: updateFolder
+      summary: "Update a folder. Use `name` to rename, `parentFolderId` to move."
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Folder"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Folders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateFolderRequest"
+    delete:
+      operationId: deleteFolder
+      summary: Delete a folder. Fails with 409 if the folder is not empty.
+      parameters:
+        - name: folderId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "204":
+          description: "There is no content to send for this request, but the headers may be useful. "
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "409":
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Folders
+  /v1/projects:
+    post:
+      operationId: createProject
+      summary: Create a project in a folder.
+      parameters: []
+      responses:
+        "201":
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProjectRequest"
+    get:
+      operationId: listProjects
+      summary: List all projects in the organization.
+      parameters:
+        - $ref: "#/components/parameters/PageQuery.cursor"
+        - $ref: "#/components/parameters/PageQuery.limit"
+        - name: folderId
+          in: query
+          required: false
+          description: Filter to projects in this folder only.
+          schema:
+            $ref: "#/components/schemas/Uuid"
+          explode: false
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Project"
+                  nextCursor:
+                    type: string
+                    description: Cursor for the next page. Absent when there is no next page.
+                description: "A paginated list response. `nextCursor` is opaque; pass it back unchanged to fetch the next page."
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Projects
+  "/v1/projects/{projectId}":
+    get:
+      operationId: getProject
+      summary: Retrieve a project by id.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Projects
+    patch:
+      operationId: updateProject
+      summary: "Update a project. Use `name` to rename, `folderId` to move."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Project"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProjectRequest"
+    delete:
+      operationId: deleteProject
+      summary: Delete a project.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "204":
+          description: "There is no content to send for this request, but the headers may be useful. "
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Projects
+  "/v1/projects/{projectId}/revisions":
+    post:
+      operationId: createRevision
+      summary: Create a new revision for a project.
+      description: "Each revision is a distinct snapshot. Re-using an existing `version` label is allowed; the\nnew revision becomes the latest entry in that version's history (older revisions are kept)."
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "201":
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Revision"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "422":
+          description: Client error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Revisions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRevisionRequest"
+    get:
+      operationId: listRevisions
+      summary: List revisions for a project.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+        - $ref: "#/components/parameters/PageQuery.cursor"
+        - $ref: "#/components/parameters/PageQuery.limit"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - items
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Revision"
+                  nextCursor:
+                    type: string
+                    description: Cursor for the next page. Absent when there is no next page.
+                description: "A paginated list response. `nextCursor` is opaque; pass it back unchanged to fetch the next page."
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Revisions
+  "/v1/projects/{projectId}/revisions/{revisionId}":
+    get:
+      operationId: getRevision
+      summary: Retrieve a revision by id.
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+        - name: revisionId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/Uuid"
+      responses:
+        "200":
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Revision"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "404":
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Revisions
+  /v1/uploads:
+    post:
+      operationId: uploadFile
+      summary: Upload a file.
+      description: "Stores a file in your organization's upload area and returns a reference. Use the returned `id`\nto attach the file to other resources (e.g., when creating a project revision).\n\nUploads expire 24 hours after creation. The maximum file size is 100 MB."
+      parameters: []
+      responses:
+        "201":
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "400":
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+        "401":
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetail"
+      tags:
+        - Uploads
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+                - file
+security:
+  - BearerAuth: []
+components:
+  parameters:
+    PageQuery.cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+      explode: false
+    PageQuery.limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 50
+      explode: false
+  schemas:
+    CreateArchiveRevisionRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/CreateRevisionRequest"
+      description: "Create a revision from a previously uploaded source archive (zip, tar.gz, etc.)."
+    CreateFolderRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: "#/components/schemas/FolderName"
+        parentFolderId:
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          description: Parent folder id. Omit to create a top-level folder.
+    CreateProjectRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        folderId:
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          description: "Folder to create the project in. Omit to use the organization's default (top-level) folder."
+    CreateRevisionRequest:
+      type: object
+      required:
+        - type
+        - uploadId
+        - version
+      properties:
+        type:
+          type: string
+        uploadId:
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          description: "Id of a prior `POST /v1/uploads` call. The upload's content type must match the requested revision `type`."
+        version:
+          type: string
+          description: "Version label, typically a Git tag or release name (e.g., `v1.4.2`). Re-using an existing version creates a new revision in that version's history."
+      discriminator:
+        propertyName: type
+        mapping:
+          sbom: "#/components/schemas/CreateSbomRevisionRequest"
+          archive: "#/components/schemas/CreateArchiveRevisionRequest"
+      description: "Request body for creating a revision. Discriminated by `type`."
+    CreateSbomRevisionRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/CreateRevisionRequest"
+      description: "Create a revision from a previously uploaded SBOM (CycloneDX or SPDX, JSON or XML)."
+    Folder:
+      type: object
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        parentFolderId:
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          description: Parent folder id. Absent for top-level (organization-root) folders.
+        name:
+          $ref: "#/components/schemas/FolderName"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    FolderName:
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: ^\S(.*\S)?$
+    ProblemDetail:
+      type: object
+      required:
+        - title
+        - status
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+    Project:
+      type: object
+      required:
+        - id
+        - folderId
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        folderId:
+          $ref: "#/components/schemas/Uuid"
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ProjectName:
+      type: string
+      minLength: 1
+      maxLength: 128
+      pattern: ^\S(.*\S)?$
+    Revision:
+      type: object
+      required:
+        - id
+        - projectId
+        - type
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        projectId:
+          $ref: "#/components/schemas/Uuid"
+        type:
+          allOf:
+            - $ref: "#/components/schemas/RevisionType"
+          description: The kind of input that produced this revision.
+        status:
+          allOf:
+            - $ref: "#/components/schemas/RevisionStatus"
+          description: Current pipeline state.
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      description: A snapshot of a project at a specific version.
+    RevisionStatus:
+      type: string
+      enum:
+        - created
+        - analyzing
+        - scanning
+        - completed
+        - failed
+      description: "The state of a revision's analysis pipeline."
+    RevisionType:
+      type: string
+      enum:
+        - sbom
+        - archive
+        - git
+      description: The kind of input that backs a revision.
+    UpdateFolderRequest:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/FolderName"
+        parentFolderId:
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          nullable: true
+          description: "Move the folder to a new parent. Pass `null` to make it a top-level folder."
+    UpdateProjectRequest:
+      type: object
+      properties:
+        name:
+          $ref: "#/components/schemas/ProjectName"
+        folderId:
+          $ref: "#/components/schemas/Uuid"
+    Upload:
+      type: object
+      required:
+        - id
+        - contentType
+        - size
+        - createdAt
+        - expiresAt
+      properties:
+        id:
+          $ref: "#/components/schemas/Uuid"
+        contentType:
+          type: string
+          description: "Detected media type (sniffed server-side from the file contents, not the request header)."
+        size:
+          type: integer
+          format: int64
+          description: File size in bytes.
+        filename:
+          type: string
+          description: Original filename as sent by the client. Absent if the client did not provide one.
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+      description: "A file uploaded to your organization. Use the `id` to reference it from other endpoints."
+    Uuid:
+      type: string
+      format: uuid
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://api.scatool.com
+    description: Production
+    variables: {}
