@@ -59,7 +59,7 @@ paths:
         - name: parentFolderId
           in: query
           required: false
-          description: Filter to only direct children of this folder.
+          description: Filter to direct children of this folder. Omit to list top-level folders.
           schema:
             $ref: "#/components/schemas/Uuid"
           explode: false
@@ -247,7 +247,7 @@ paths:
         - name: folderId
           in: query
           required: false
-          description: Filter to projects in this folder only.
+          description: Filter to projects directly in this folder. Omit to list top-level projects.
           schema:
             $ref: "#/components/schemas/Uuid"
           explode: false
@@ -593,7 +593,7 @@ components:
         folderId:
           allOf:
             - $ref: "#/components/schemas/Uuid"
-          description: "Folder to create the project in. Omit to use the organization's default (top-level) folder."
+          description: Folder to create the project in. Omit to create as a top-level project.
     CreateRevisionRequest:
       type: object
       required:
@@ -669,7 +669,6 @@ components:
       type: object
       required:
         - id
-        - folderId
         - name
         - createdAt
         - updatedAt
@@ -677,7 +676,9 @@ components:
         id:
           $ref: "#/components/schemas/Uuid"
         folderId:
-          $ref: "#/components/schemas/Uuid"
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          description: "Containing folder id. Absent for top-level projects (in the organization's root folder)."
         name:
           $ref: "#/components/schemas/ProjectName"
         createdAt:
@@ -753,7 +754,11 @@ components:
         name:
           $ref: "#/components/schemas/ProjectName"
         folderId:
-          $ref: "#/components/schemas/Uuid"
+          type: string
+          allOf:
+            - $ref: "#/components/schemas/Uuid"
+          nullable: true
+          description: "Move the project to a new folder. Pass `null` to make it a top-level project."
     Upload:
       type: object
       required:

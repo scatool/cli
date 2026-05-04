@@ -81,12 +81,14 @@ const update = command({
   options: {
     projectId: positional("projectId").required().desc("Project id."),
     name: string("name").desc("New project name."),
-    folder: string("folder").desc("Move to this folder id."),
+    folder: string("folder").desc(
+      "New folder id. Pass 'root' to move the project to the top level.",
+    ),
   },
   handler: async (opts) => {
-    const body: { name?: string; folderId?: string } = {};
+    const body: { name?: string; folderId?: string | null } = {};
     if (opts.name !== undefined) body.name = opts.name;
-    if (opts.folder !== undefined) body.folderId = opts.folder;
+    if (opts.folder !== undefined) body.folderId = opts.folder === "root" ? null : opts.folder;
     if (Object.keys(body).length === 0) {
       throw new Error("Pass --name or --folder to update a project.");
     }
