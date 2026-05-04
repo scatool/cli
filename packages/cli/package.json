@@ -1,0 +1,36 @@
+{
+  "name": "@scatool/cli",
+  "version": "0.0.0",
+  "description": "Command-line interface for the SCA Tool.",
+  "license": "MIT",
+  "bin": {
+    "sca": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test",
+    "check": "vp check",
+    "prepublishOnly": "vp run build"
+  },
+  "dependencies": {
+    "@drizzle-team/brocli": "^0.12.0",
+    "@scatool/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@typescript/native-preview": "7.0.0-dev.20260430.1",
+    "typescript": "^6.0.2",
+    "vite-plus": "^0.1.14"
+  }
+}
