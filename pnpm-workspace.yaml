@@ -4,7 +4,7 @@ packages:
 catalogMode: prefer
 
 catalog:
-  "@types/node": ^24
+  "@types/node": ^25
   typescript: ^5
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
