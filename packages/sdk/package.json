@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.97.2",
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.9.0",
     "@typescript/native-preview": "7.0.0-dev.20260517.1",
     "typescript": "^6.0.2",
     "vite-plus": "^0.1.14"
