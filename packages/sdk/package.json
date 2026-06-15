@@ -1,14 +1,17 @@
 {
   "name": "@scatool/sdk",
-  "version": "0.0.0",
-  "description": "TypeScript SDK for the SCA Tool Public API.",
+  "version": "0.1.0-alpha.0",
+  "description": "TypeScript SDK for the SCA Tool Public API",
   "license": "MIT",
   "files": [
     "dist"
   ],
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {

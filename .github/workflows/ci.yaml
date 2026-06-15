@@ -6,6 +6,8 @@ on:
   pull_request:
     branches: [main]
 
+permissions: read-all
+
 jobs:
   vite:
     name: Vite
@@ -19,6 +21,13 @@ jobs:
 
       - run: vp install
       - run: vp run -r generate
+      - run: vp run -r build
       - run: vp check
       - run: vp run -r test
-      - run: vp run -r build
+
+      - name: Upload to SCA Tool
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: node packages/cli/dist/cli.mjs revisions create-sbom main --codebase .
+        env:
+          SCATOOL_TOKEN: ${{ secrets.SCATOOL_TOKEN }}
+          SCATOOL_PROJECT_ID: ${{ secrets.SCATOOL_PROJECT_ID }}

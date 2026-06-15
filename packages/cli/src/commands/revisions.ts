@@ -1,4 +1,7 @@
 import { boolean, command, number, positional, string } from "@drizzle-team/brocli";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   createRevision,
   getRevision,
@@ -8,6 +11,7 @@ import {
 } from "@scatool/sdk";
 import { apiError, requireProjectId } from "../api.ts";
 import { requireClient } from "../context.ts";
+import { extractSbom } from "../exscalibur.ts";
 import { emit } from "../output.ts";
 import { uploadFromPath } from "./uploads.ts";
 
@@ -66,8 +70,8 @@ const createArchive = command({
 
 const createSbom = command({
   name: "create-sbom",
-  desc: "Upload an SBOM (CycloneDX or SPDX, JSON or XML) and create a revision from it.",
-  options: createOptions(),
+  desc: "Upload or generate an SBOM and create a revision from it.",
+  options: createOptions({ codebase: true }),
   handler: (opts) => createRevisionHandler("sbom", opts),
 });
 
@@ -92,13 +96,13 @@ const wait = command({
   },
 });
 
-function createOptions() {
-  return {
+function createOptions(options: { codebase?: boolean } = {}) {
+  const opts = {
     label: positional("label").required().desc("Version label, e.g. 'v1.4.2'."),
     project: string("project").desc("Project id. Falls back to SCATOOL_PROJECT_ID."),
     file: string("file").desc("Path to a file to upload. Mutually exclusive with --upload-id."),
     uploadId: string("upload-id").desc(
-      "Reuse an existing upload id. Mutually exclusive with --file.",
+      "Reuse an existing upload id. Mutually exclusive with --file and --codebase.",
     ),
     wait: boolean("wait")
       .default(false)
@@ -106,12 +110,29 @@ function createOptions() {
     timeout: number("timeout").default(600).desc("Wait timeout in seconds."),
     interval: number("interval").default(5).desc("Wait polling interval in seconds."),
   };
+  return options.codebase
+    ? {
+        ...opts,
+        codebase: string("codebase").desc(
+          "Path to analyze with Exscalibur before uploading. Mutually exclusive with --file and --upload-id.",
+        ),
+        ignore: string("ignore").desc(
+          "Comma-separated glob patterns to ignore during Exscalibur analysis.",
+        ),
+        extractorOptionsJson: string("extractor-options-json").desc(
+          "JSON object with Exscalibur options keyed by extractor name.",
+        ),
+      }
+    : opts;
 }
 
 interface CreateOpts {
   label: string;
   project: string | undefined;
   file: string | undefined;
+  codebase?: string | undefined;
+  ignore?: string | undefined;
+  extractorOptionsJson?: string | undefined;
   uploadId: string | undefined;
   wait: boolean;
   timeout: number;
@@ -119,11 +140,15 @@ interface CreateOpts {
 }
 
 async function createRevisionHandler(type: "archive" | "sbom", opts: CreateOpts): Promise<void> {
-  if ((opts.file === undefined) === (opts.uploadId === undefined)) {
-    throw new Error("Pass exactly one of --file or --upload-id.");
+  const inputs = [opts.file, opts.uploadId, opts.codebase].filter((value) => value !== undefined);
+  if (inputs.length !== 1) {
+    throw new Error("Pass exactly one of --file, --upload-id, or --codebase.");
+  }
+  if (type === "archive" && opts.codebase !== undefined) {
+    throw new Error("--codebase is only supported for create-sbom.");
   }
   const projectId = requireProjectId(opts.project);
-  const uploadId = opts.uploadId ?? (await uploadFromPath(opts.file as string)).id;
+  const uploadId = opts.uploadId ?? (await createUpload(type, opts)).id;
 
   const { data, error, response } = await createRevision({
     client: requireClient(),
@@ -142,6 +167,44 @@ async function createRevisionHandler(type: "archive" | "sbom", opts: CreateOpts)
     : data;
   emit(final, REVISION_COLUMNS);
   if (opts.wait && final.status === "failed") process.exit(1);
+}
+
+async function createUpload(type: "archive" | "sbom", opts: CreateOpts) {
+  if (opts.file !== undefined) return uploadFromPath(opts.file);
+  if (type !== "sbom" || opts.codebase === undefined) {
+    throw new Error("No upload input was provided.");
+  }
+
+  const dir = await mkdtemp(join(tmpdir(), "scatool-sbom-"));
+  const file = join(dir, "exscalibur-result.json");
+  try {
+    const result = await extractSbom(opts.codebase, {
+      ignore: parseIgnore(opts.ignore),
+      extractorOptions: parseExtractorOptionsJson(opts.extractorOptionsJson),
+    });
+    await writeFile(file, `${JSON.stringify(result, null, 2)}\n`, "utf8");
+    return await uploadFromPath(file);
+  } finally {
+    await rm(dir, { recursive: true, force: true });
+  }
+}
+
+function parseIgnore(value: string | undefined): string[] | undefined {
+  return value
+    ?.split(",")
+    .map((pattern) => pattern.trim())
+    .filter((pattern) => pattern.length > 0);
+}
+
+function parseExtractorOptionsJson(
+  value: string | undefined,
+): Record<string, Record<string, unknown>> | undefined {
+  if (value === undefined) return undefined;
+  const parsed: unknown = JSON.parse(value);
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error("--extractor-options-json must be a JSON object.");
+  }
+  return parsed as Record<string, Record<string, unknown>>;
 }
 
 async function fetchRevision(projectId: string, revisionId: string): Promise<Revision> {
