@@ -33,9 +33,9 @@
     "@scatool/sdk": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260525.1",
-    "typescript": "^6.0.2",
+    "typescript": "^6.0.3",
     "vite-plus": "^0.1.14"
   }
 }
