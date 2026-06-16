@@ -7,8 +7,8 @@ settings:
 catalogs:
   default:
     '@types/node':
-      specifier: ^22
-      version: 22.19.21
+      specifier: ^25
+      version: 25.6.0
     vite-plus:
       specifier: ^0.1.24
       version: 0.1.24
@@ -51,7 +51,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: 'catalog:'
-        version: 22.19.21
+        version: 25.6.0
       '@typescript/native-preview':
         specifier: 7.0.0-dev.20260525.1
         version: 7.0.0-dev.20260525.1
@@ -60,7 +60,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: ^0.1.14
-        version: 0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
+        version: 0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
 
   packages/sdk:
     devDependencies:
@@ -69,7 +69,7 @@ importers:
         version: 0.97.3(typescript@6.0.3)
       '@types/node':
         specifier: 'catalog:'
-        version: 22.19.21
+        version: 25.6.0
       '@typescript/native-preview':
         specifier: 7.0.0-dev.20260525.1
         version: 7.0.0-dev.20260525.1
@@ -78,7 +78,7 @@ importers:
         version: 6.0.3
       vite-plus:
         specifier: ^0.1.14
-        version: 0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
+        version: 0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
 
 packages:
 
@@ -855,9 +855,6 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-
-  '@types/node@22.19.21':
-    resolution: {integrity: sha512-VMeFBSCKQKmm2swI2kW51SFusDqekC6q9trBCvJ/JliDchFSuoYYKN7yVNjPthP1HKZcx3U1gI/wTcEBjEFKTA==}
 
   '@types/node@25.6.0':
     resolution: {integrity: sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==}
@@ -1649,9 +1646,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@6.21.0:
-    resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
-
   undici-types@7.19.2:
     resolution: {integrity: sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg==}
 
@@ -2220,14 +2214,9 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@22.19.21':
-    dependencies:
-      undici-types: 6.21.0
-
   '@types/node@25.6.0':
     dependencies:
       undici-types: 7.19.2
-    optional: true
 
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20260525.1':
     optional: true
@@ -2260,14 +2249,14 @@ snapshots:
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20260525.1
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20260525.1
 
-  '@voidzero-dev/vite-plus-core@0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)':
+  '@voidzero-dev/vite-plus-core@0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)':
     dependencies:
       '@oxc-project/runtime': 0.127.0
       '@oxc-project/types': 0.127.0
       lightningcss: 1.32.0
       postcss: 8.5.13
     optionalDependencies:
-      '@types/node': 22.19.21
+      '@types/node': 25.6.0
       fsevents: 2.3.3
       jiti: 2.7.0
       typescript: 6.0.3
@@ -2322,11 +2311,11 @@ snapshots:
   '@voidzero-dev/vite-plus-linux-x64-musl@0.1.24':
     optional: true
 
-  '@voidzero-dev/vite-plus-test@0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)':
+  '@voidzero-dev/vite-plus-test@0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)':
     dependencies:
       '@standard-schema/spec': 1.1.0
       '@types/chai': 5.2.3
-      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)
+      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)
       es-module-lexer: 1.7.0
       obug: 2.1.1
       pixelmatch: 7.2.0
@@ -2336,10 +2325,10 @@ snapshots:
       tinybench: 2.9.0
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
-      vite: 8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4)
+      vite: 8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4)
       ws: 8.20.0
     optionalDependencies:
-      '@types/node': 22.19.21
+      '@types/node': 25.6.0
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@tsdown/css'
@@ -2858,16 +2847,13 @@ snapshots:
 
   typescript@6.0.3: {}
 
-  undici-types@6.21.0: {}
+  undici-types@7.19.2: {}
 
-  undici-types@7.19.2:
-    optional: true
-
-  vite-plus@0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4):
+  vite-plus@0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4):
     dependencies:
       '@oxc-project/types': 0.127.0
-      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)
-      '@voidzero-dev/vite-plus-test': 0.1.20(@types/node@22.19.21)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
+      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.8.4)
+      '@voidzero-dev/vite-plus-test': 0.1.20(@types/node@25.6.0)(jiti@2.7.0)(typescript@6.0.3)(vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4))(yaml@2.8.4)
       oxfmt: 0.46.0
       oxlint: 1.61.0(oxlint-tsgolint@0.22.0)
       oxlint-tsgolint: 0.22.0
@@ -2959,19 +2945,6 @@ snapshots:
       - utf-8-validate
       - vite
       - yaml
-
-  vite@8.0.10(@types/node@22.19.21)(jiti@2.7.0)(yaml@2.8.4):
-    dependencies:
-      lightningcss: 1.32.0
-      picomatch: 4.0.4
-      postcss: 8.5.15
-      rolldown: 1.0.0-rc.17
-      tinyglobby: 0.2.17
-    optionalDependencies:
-      '@types/node': 22.19.21
-      fsevents: 2.3.3
-      jiti: 2.7.0
-      yaml: 2.8.4
 
   vite@8.0.10(@types/node@25.6.0)(jiti@2.7.0)(yaml@2.8.4):
     dependencies:
