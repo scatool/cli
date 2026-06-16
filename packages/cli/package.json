@@ -4,7 +4,7 @@
   "description": "Command-line interface for SCA Tool",
   "license": "MIT",
   "bin": {
-    "scatool": "./dist/cli.mjs"
+    "scatool": "dist/cli.mjs"
   },
   "files": [
     "dist"
@@ -14,7 +14,8 @@
     "./package.json": "./package.json"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "tag": "alpha"
   },
   "scripts": {
     "build": "vp pack",
@@ -36,6 +37,6 @@
     "@types/node": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260525.1",
     "typescript": "^6.0.3",
-    "vite-plus": "^0.1.14"
+    "vite-plus": "catalog:"
   }
 }
