@@ -25,7 +25,7 @@
     "prepublishOnly": "vp run build"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "^0.98.2",
+    "@hey-api/openapi-ts": "^0.99.0",
     "@types/node": "catalog:",
     "@typescript/native-preview": "7.0.0-dev.20260619.1",
     "typescript": "^6.0.3",
