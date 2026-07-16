@@ -117,7 +117,7 @@ function createOptions(options: { codebase?: boolean } = {}) {
           "Path to analyze with Exscalibur before uploading. Mutually exclusive with --file and --upload-id.",
         ),
         ignore: string("ignore").desc(
-          "Comma-separated glob patterns to ignore during Exscalibur analysis.",
+          "Comma-separated glob patterns to ignore for all Exscalibur extractors.",
         ),
         extractorOptionsJson: string("extractor-options-json").desc(
           "JSON object with Exscalibur options keyed by extractor name.",

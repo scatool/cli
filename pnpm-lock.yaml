@@ -31,20 +31,20 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
       '@scatool/analyzer-core':
-        specifier: 0.1.0-alpha.0
-        version: 0.1.0-alpha.0(typescript@6.0.3)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(typescript@6.0.3)
       '@scatool/analyzer-plugin-go':
-        specifier: 0.1.0-alpha.0
-        version: 0.1.0-alpha.0(typescript@6.0.3)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(typescript@6.0.3)
       '@scatool/analyzer-plugin-gradle':
-        specifier: 0.1.0-alpha.0
-        version: 0.1.0-alpha.0(typescript@6.0.3)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(typescript@6.0.3)
       '@scatool/analyzer-plugin-javascript':
-        specifier: 0.1.0-alpha.0
-        version: 0.1.0-alpha.0(typescript@6.0.3)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(typescript@6.0.3)
       '@scatool/analyzer-plugin-maven':
-        specifier: 0.1.0-alpha.0
-        version: 0.1.0-alpha.0(typescript@6.0.3)
+        specifier: 0.1.0-alpha.2
+        version: 0.1.0-alpha.2(typescript@6.0.3)
       '@scatool/sdk':
         specifier: workspace:*
         version: link:../sdk
@@ -533,32 +533,32 @@ packages:
   '@rolldown/pluginutils@1.0.0-rc.17':
     resolution: {integrity: sha512-n8iosDOt6Ig1UhJ2AYqoIhHWh/isz0xpicHTzpKBeotdVsTEcxsSA/i3EVM7gQAj0rU27OLAxCjzlj15IWY7bg==}
 
-  '@scatool/analyzer-core@0.1.0-alpha.0':
-    resolution: {integrity: sha512-Bq90Mt7ruxKwQMXny4flYou24ooviNh9VxfMMFQrLJSakGW4G/1vHmIj/lvk6eAaLrxOCrMmXPiA08fYoPmjlA==}
+  '@scatool/analyzer-core@0.1.0-alpha.2':
+    resolution: {integrity: sha512-eyycoqA6aETLEO42WUeqOE+zOylzd5S3fpj3Qep98beswHTRBKA9+AoxEZqoseunrN5PLVhrKITizf6e600/ZQ==}
     engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5
 
-  '@scatool/analyzer-plugin-go@0.1.0-alpha.0':
-    resolution: {integrity: sha512-yrkvR2HHgFu7FrBMkIcLUx7PNwp136gOqMykhW3ueQf258hVjkU4MHOaVp6Xe76eEGtcxEUYVmLjG25CnSg1bA==}
+  '@scatool/analyzer-plugin-go@0.1.0-alpha.2':
+    resolution: {integrity: sha512-BRa8Z5Vme6LKJDt0bUkJa+sJTTPzHC96oJy/Frq3Fu8+aSG7XlcX6pixOOeQpOdinQdqROyO2SaIrZPSWMAitw==}
     engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5
 
-  '@scatool/analyzer-plugin-gradle@0.1.0-alpha.0':
-    resolution: {integrity: sha512-tUAx/58K9jbNvjlQSPPH7i7Sq4d86m7NuDfrbs3pE7M0Q5yuTn0m9LlU1IY+nSmcrMbSQPp5/Pqwmhl6GO4Xvg==}
+  '@scatool/analyzer-plugin-gradle@0.1.0-alpha.2':
+    resolution: {integrity: sha512-ZXLHLlVmd1lETqd2whHbRkP8NAgDryUA16RCgR7uHj7FrEC1DSIkPE6ZIRJHNFRxx4pAU80hfmdt1cv1mZP2zg==}
     engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5
 
-  '@scatool/analyzer-plugin-javascript@0.1.0-alpha.0':
-    resolution: {integrity: sha512-X8pCizFxj+ow6QQUxjLOa9GO2O/UAl9ljmhtH3iP64IyJZWfNly+7WOneSBqs9wMY8kzYvgmdHEuU4oSjnqThQ==}
+  '@scatool/analyzer-plugin-javascript@0.1.0-alpha.2':
+    resolution: {integrity: sha512-LcSLk5E6JOIJ3ASYycNuG4LJ4PIdbNSv3w9cGYQALjsjyeXFZ0USeRaVY1FdUanIUMqZmigw3tvUYHZLunxZiA==}
     engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5.9.3
 
-  '@scatool/analyzer-plugin-maven@0.1.0-alpha.0':
-    resolution: {integrity: sha512-//mTVxPWdgD/NIA9BqGi7Ix7HmH2y6waJbd/VWuILZnGn3TRDppXl3+Mq5DubMvUcuL3CdwyclhfhXRuBL4Sdw==}
+  '@scatool/analyzer-plugin-maven@0.1.0-alpha.2':
+    resolution: {integrity: sha512-GZeJ8agOlyACbBJkUdzoyfPiRNkQoB2ycL0w86Yvs1HcQcfcdeDXXg3BkmDW1uvfL3c4fMYtWz0EaOz9unxWNA==}
     engines: {node: '>=22'}
     peerDependencies:
       typescript: ^5
@@ -1570,37 +1570,37 @@ snapshots:
 
   '@rolldown/pluginutils@1.0.0-rc.17': {}
 
-  '@scatool/analyzer-core@0.1.0-alpha.0(typescript@6.0.3)':
+  '@scatool/analyzer-core@0.1.0-alpha.2(typescript@6.0.3)':
     dependencies:
       fast-glob: 3.3.3
       typescript: 6.0.3
       zod: 4.4.3
 
-  '@scatool/analyzer-plugin-go@0.1.0-alpha.0(typescript@6.0.3)':
+  '@scatool/analyzer-plugin-go@0.1.0-alpha.2(typescript@6.0.3)':
     dependencies:
-      '@scatool/analyzer-core': 0.1.0-alpha.0(typescript@6.0.3)
+      '@scatool/analyzer-core': 0.1.0-alpha.2(typescript@6.0.3)
       packageurl-js: 2.0.1
       typescript: 6.0.3
 
-  '@scatool/analyzer-plugin-gradle@0.1.0-alpha.0(typescript@6.0.3)':
+  '@scatool/analyzer-plugin-gradle@0.1.0-alpha.2(typescript@6.0.3)':
     dependencies:
-      '@scatool/analyzer-core': 0.1.0-alpha.0(typescript@6.0.3)
+      '@scatool/analyzer-core': 0.1.0-alpha.2(typescript@6.0.3)
       packageurl-js: 2.0.1
       typescript: 6.0.3
       zod: 4.4.3
 
-  '@scatool/analyzer-plugin-javascript@0.1.0-alpha.0(typescript@6.0.3)':
+  '@scatool/analyzer-plugin-javascript@0.1.0-alpha.2(typescript@6.0.3)':
     dependencies:
-      '@scatool/analyzer-core': 0.1.0-alpha.0(typescript@6.0.3)
+      '@scatool/analyzer-core': 0.1.0-alpha.2(typescript@6.0.3)
       jsonc-parser: 3.3.1
       packageurl-js: 2.0.1
       typescript: 6.0.3
       yaml: 2.8.4
       zod: 4.4.3
 
-  '@scatool/analyzer-plugin-maven@0.1.0-alpha.0(typescript@6.0.3)':
+  '@scatool/analyzer-plugin-maven@0.1.0-alpha.2(typescript@6.0.3)':
     dependencies:
-      '@scatool/analyzer-core': 0.1.0-alpha.0(typescript@6.0.3)
+      '@scatool/analyzer-core': 0.1.0-alpha.2(typescript@6.0.3)
       packageurl-js: 2.0.1
       typescript: 6.0.3
       zod: 4.4.3
