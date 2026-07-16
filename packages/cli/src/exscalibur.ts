@@ -29,7 +29,13 @@ export async function extractSbom(
 
   for (const extractor of EXTRACTORS) {
     try {
-      results.push(await extractor.extract(codebasePath, extractorOptions(extractor, options)));
+      results.push(
+        await extractor.extract(
+          codebasePath,
+          options.extractorOptions?.[extractor.name],
+          options.ignore ? { ignore: options.ignore } : undefined,
+        ),
+      );
     } catch (err) {
       results.push({
         packages: [],
@@ -37,6 +43,7 @@ export async function extractSbom(
         relationships: [],
         issues: [
           {
+            code: "extractor-failed",
             message: `${extractor.name} extractor failed: ${
               err instanceof Error ? err.message : String(err)
             }`,
@@ -48,22 +55,4 @@ export async function extractSbom(
   }
 
   return mergeResults(results);
-}
-
-function extractorOptions(
-  extractor: Extractor,
-  options: ExtractSbomOptions,
-): Record<string, unknown> {
-  const specific = options.extractorOptions?.[extractor.name] ?? {};
-  if (!options.ignore || options.ignore.length === 0 || !extractor.optionsSchema) {
-    return specific;
-  }
-
-  const defaults = extractor.optionsSchema.parse({}) as Record<string, unknown>;
-  const defaultIgnore = Array.isArray(defaults.ignore) ? defaults.ignore : [];
-  const specificIgnore = Array.isArray(specific.ignore) ? specific.ignore : [];
-  return {
-    ...specific,
-    ignore: [...defaultIgnore, ...specificIgnore, ...options.ignore],
-  };
 }

@@ -26,11 +26,11 @@
   },
   "dependencies": {
     "@drizzle-team/brocli": "^0.12.0",
-    "@scatool/analyzer-core": "0.1.0-alpha.0",
-    "@scatool/analyzer-plugin-go": "0.1.0-alpha.0",
-    "@scatool/analyzer-plugin-gradle": "0.1.0-alpha.0",
-    "@scatool/analyzer-plugin-javascript": "0.1.0-alpha.0",
-    "@scatool/analyzer-plugin-maven": "0.1.0-alpha.0",
+    "@scatool/analyzer-core": "0.1.0-alpha.2",
+    "@scatool/analyzer-plugin-go": "0.1.0-alpha.2",
+    "@scatool/analyzer-plugin-gradle": "0.1.0-alpha.2",
+    "@scatool/analyzer-plugin-javascript": "0.1.0-alpha.2",
+    "@scatool/analyzer-plugin-maven": "0.1.0-alpha.2",
     "@scatool/sdk": "workspace:*"
   },
   "devDependencies": {
