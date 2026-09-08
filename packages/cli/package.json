@@ -25,7 +25,7 @@
     "prepublishOnly": "vp run build"
   },
   "dependencies": {
-    "@drizzle-team/brocli": "^0.12.0",
+    "@drizzle-team/brocli": "^0.12.1",
     "@scatool/analyzer-core": "0.1.0-alpha.2",
     "@scatool/analyzer-plugin-go": "0.1.0-alpha.2",
     "@scatool/analyzer-plugin-gradle": "0.1.0-alpha.2",
